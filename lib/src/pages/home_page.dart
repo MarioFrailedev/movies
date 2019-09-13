@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:movies/src/utils/appcolors.dart';
+import 'package:movies/src/widgets/card_swiper_landscape_widget.dart';
 import 'package:movies/src/widgets/card_swiper_widget.dart';
+import 'package:movies/provider/movies_provider.dart';
 
 class HomePage extends StatelessWidget {
+  
+  final moviesProvider = new MoviesProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +26,62 @@ class HomePage extends StatelessWidget {
       ),
       body: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             _swiperCards(),
+            _footer(context),
           ],
         ),
       )
     );
   }
 
-  _swiperCards() {
-    return CardSwiper(
-      movies: [1,2,3,4,5],
+  Widget _swiperCards() {
+
+    return FutureBuilder(
+      future: moviesProvider.getCinemas(),
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+
+        if( snapshot.hasData ) {
+          return CardSwiper( movies: snapshot.data,);
+        }else {
+          return Container(
+            height: 400,
+            child: Center(
+            child :CircularProgressIndicator()
+            )
+          );
+        }      
+      },
     );
-    //return Container();
+  }
+
+  Widget _footer(BuildContext context) {
+
+    return Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 20.0),
+            child: Text('Populares', style: Theme.of(context).textTheme.subhead)
+          ),
+          SizedBox(height: 5.0,),
+          FutureBuilder(
+            future: moviesProvider.getPopulars(),
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              
+              if( snapshot.hasData ) {
+                return MovieLandscape( movies: snapshot.data, );
+              }else {
+               return Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ],
+      ),
+    );
+
   }
 }
