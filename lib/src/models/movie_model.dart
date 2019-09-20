@@ -62,17 +62,22 @@ class Movie {
     genreIds         = json['genre_ids'].cast<int>();
     title            = json['title'];
     voteAverage      = json['vote_average'] / 1;
-    overview         = json['overiew,'];
+    overview         = json['overview'];
     releaseDate      = json['release_date'];
   }
 
   getPosterImg() {
-
     if(posterPath == null) {
       return 'https://oopperabaletti.fi/app/uploads/2015/09/placeholder-e1441274703663.jpg';
     }else { return 'https://image.tmdb.org/t/p/w500/$posterPath'; 
     }
-    
+  }
+
+  getBGImg() {
+    if(posterPath == null) {
+      return 'https://oopperabaletti.fi/app/uploads/2015/09/placeholder-e1441274703663.jpg';
+    }else { return 'https://image.tmdb.org/t/p/w500/$backdropPath'; 
+    }
   }
 
 }

@@ -11,12 +11,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    moviesProvider.getPopulars();
+
     return Scaffold(
       backgroundColor: AppColors.whiteBgColor,
       appBar: AppBar(
         title: Text('Peliculas en cartelera'),
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.grey,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -67,13 +70,16 @@ class HomePage extends StatelessWidget {
             padding: EdgeInsets.only(left: 20.0),
             child: Text('Populares', style: Theme.of(context).textTheme.subhead)
           ),
-          SizedBox(height: 5.0,),
-          FutureBuilder(
-            future: moviesProvider.getPopulars(),
+          SizedBox(height: 5.0),
+
+          StreamBuilder(
+            stream: moviesProvider.popularStream,
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               
               if( snapshot.hasData ) {
-                return MovieLandscape( movies: snapshot.data, );
+                return MovieLandscape(
+                   movies: snapshot.data, 
+                   nextPage: moviesProvider.getPopulars);
               }else {
                return Center(child: CircularProgressIndicator());
               }
@@ -82,6 +88,5 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
-
   }
 }

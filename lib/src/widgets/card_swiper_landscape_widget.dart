@@ -4,32 +4,41 @@ import 'package:movies/src/models/movie_model.dart';
 class MovieLandscape extends StatelessWidget {
 
   final List<Movie> movies;
+  final Function nextPage;
 
-  MovieLandscape({ @required this.movies });
+  MovieLandscape({ @required this.movies, @required this.nextPage });
+
+  final _pageController = new PageController(
+      initialPage: 1,
+      viewportFraction: 0.3,
+    );
 
   @override
   Widget build(BuildContext context) {
 
     final _screenSize = MediaQuery.of(context).size;
 
+    _pageController.addListener( () {
+      if(_pageController.position.pixels >= _pageController.position.maxScrollExtent - 200){
+        nextPage();
+      }
+    }) ;
+
     return Container(
-
-      height: _screenSize.height * 0.28,
-      child: PageView(
-        controller: PageController(
-          initialPage: 1,
-          viewportFraction: 0.3,
-
+      height: _screenSize.height * 0.29,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: movies.length,
+        itemBuilder: ( context, i ) => _buildCard(context, movies[i]
         ),
-        children: _cards(context),
       ),
     );
   }
 
-  List<Widget> _cards(BuildContext context) {
-    return movies.map((movie) {
-      return Container(
-        margin: EdgeInsets.only(right: 15.0),
+  Widget _buildCard(BuildContext context, Movie movie) {
+
+    final card = Container(
+        margin: EdgeInsets.only(right: 10.0),
         child: Column(
           children: <Widget>[
             ClipRRect(
@@ -50,6 +59,13 @@ class MovieLandscape extends StatelessWidget {
           ],
         ),
       );
-    }).toList();
+
+      return GestureDetector(
+        child: card,
+        onTap: () {
+          Navigator.pushNamed(context, 'detail', arguments: movie);
+        },
+      );
   }
+
 }
