@@ -7,7 +7,7 @@ class AppColors{
   static final Color white          = HexColor("#FFFFFF");
   static final Color whiteBgColor   = HexColor("#f9f9f9");
   static final Color homeBgColor    = HexColor("#edeef0");
-  static final Color grey           = HexColor("#cdd1d4");
+  static final Color grey           = HexColor("#989898");
 }
 
 class HexColor extends Color {
